@@ -4,17 +4,8 @@ title: Assignments
 permalink: /assignments/
 ---
 
-All assignments should be submitted through the [course
-moodle](https://courses.iitm.ac.in/course/view.php?id=9781).
-
 | Assignment   | Due Date |
-|:------------:|----------|
-| 0 | 13/08 |
-| 1 | 27/08 |
-| 2 | 14/09 |
-| 3 | 20/10 |
-| 4 | 11/11 |
-| 5 | 11/11 | 
+|:------------:|----------| 
 
 <br>
 
