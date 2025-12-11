@@ -1,0 +1,279 @@
+---
+# CS45-inspired theme for CS6868
+---
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+/* Basic reset */
+*, html, body { box-sizing: border-box; }
+html {
+  font-family: Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.5rem;
+}
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.4;
+}
+
+/* Colors matching CS45 Stanford theme */
+:root {
+  --stanford-blue: #2689ff;
+  --link-color: #005ccc;
+  --visited-link: #5a428c;
+  --content-width: 950px;
+  --border-gray: #bcbec0;
+  --bg-light: #f1f3f5;
+  --h3-gray: #979797;
+}
+
+/* Typography */
+h1, h2, h3 {
+  font-family: 'Open Sans', serif;
+  font-weight: 400;
+}
+
+h1, h2 {
+  font-weight: 500;
+}
+
+h2 {
+  border-left: 4px solid var(--stanford-blue);
+  font-size: 1.5rem;
+  margin: 1.5rem 0 0.3rem;
+  padding: 0 0 0.3rem 0.8rem;
+}
+
+h3 {
+  font-size: 1.15em;
+  font-weight: 500;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--h3-gray);
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--visited-link);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Code blocks matching CS45 */
+pre {
+  border-radius: 4px;
+  border: 1px solid var(--border-gray);
+  background: var(--bg-light);
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  padding: 5px 15px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+*:not(pre) > code {
+  background-color: var(--bg-light);
+  padding: 2px;
+  border-radius: 4px;
+  border: 1px solid var(--border-gray);
+  font-size: 0.95em;
+}
+
+pre code {
+  border-radius: 0;
+  background: none;
+  border: none;
+}
+
+/* Alert/callout boxes like CS45 */
+.alert {
+  border-left: 4px solid #c5c5c5;
+  font-size: 1rem;
+  margin: 0.3rem 0;
+  padding: 0.5rem 0.8rem;
+  font-style: italic;
+  background: #eee;
+  border-radius: 4px;
+  border: 1px solid var(--border-gray);
+}
+
+.alert-info {
+  border-left: 4px solid var(--stanford-blue);
+}
+
+/* Tables with borders and gridlines */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+table th,
+table td {
+  border: 1px solid var(--border-gray);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+
+table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  border-bottom: 2px solid var(--stanford-blue);
+}
+
+table tr:nth-child(even) {
+  background-color: #fafcff;
+}
+
+table tr:hover {
+  background-color: #f3f5f8;
+}
+
+/* Header - Stanford blue nav bar */
+.site-header {
+  padding: 0.3rem;
+  background-color: var(--stanford-blue);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.site-header .wrapper {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-title:visited,
+.site-title:link {
+  color: #fff;
+}
+
+.site-title:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Navigation */
+.site-nav {
+  display: inline-block;
+}
+
+.site-nav ul {
+  margin: 0;
+  display: inline-block;
+  list-style: none;
+}
+
+.site-nav li {
+  display: inline-block;
+  margin-right: 1rem;
+  list-style: none;
+}
+
+.site-nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.site-nav a:visited,
+.site-nav a:link {
+  color: #fff;
+}
+
+.site-nav a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Main content */
+main, .page-content {
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.wrapper {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.page-content {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Images */
+figure img, .markdown-content img, img {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid #ddd;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.site-footer .wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.site-footer a {
+  color: var(--link-color);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .site-header .wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-nav {
+    margin-top: 0.5rem;
+  }
+
+  .site-nav li {
+    margin-right: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+}

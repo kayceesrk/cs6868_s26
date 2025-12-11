@@ -1,0 +1,38 @@
+FROM ocaml/opam:ubuntu-ocaml-4.14
+RUN sudo apt update --fix-missing
+RUN sudo apt install -y libgmp-dev pkg-config libzmq3-dev zlib1g-dev
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/home/opam/.local/bin:/home/opam/.local/share/uv/tools/jupyterlab/bin:$PATH"
+
+RUN uv tool install jupyterlab
+RUN opam update
+RUN opam install jupyter merlin
+
+# Register the OCaml kernel with Jupyter
+RUN grep topfind ~/.ocamlinit || echo '#use "topfind";;' >> ~/.ocamlinit  # For using '#require' directive
+RUN grep Topfind.log ~/.ocamlinit || echo 'Topfind.log:=ignore;;' >> ~/.ocamlinit  # Suppress logging of topfind (recommended but not necessary)
+# Enable Merlin in OCaml REPL
+RUN grep merlin ~/.ocamlinit || echo '#require "merlin";;' >> ~/.ocamlinit
+RUN eval $(opam env) && ocaml-jupyter-opam-genspec
+# Register the OCaml kernel with Jupyter
+RUN eval $(opam env) && jupyter kernelspec install --name ocaml-jupyter "$(opam var share)/jupyter" --user
+
+# Install Jupyter extensions
+RUN uv pip install RISE --python ~/.local/share/uv/tools/jupyterlab/bin/python  # For presentations
+RUN uv pip install jupyterlab-rise --python ~/.local/share/uv/tools/jupyterlab/bin/python  # JupyterLab extension for RISE
+RUN uv pip install jupyterlab-mathjax3 --python ~/.local/share/uv/tools/jupyterlab/bin/python  # Better LaTeX support
+#RUN uv pip install jupyter-ai --python ~/.local/share/uv/tools/jupyterlab/bin/python  # AI assistance in JupyterLab
+#RUN uv pip install langchain-openai --python ~/.local/share/uv/tools/jupyterlab/bin/python  # OpenAI provider for Jupyter AI
+#RUN uv pip install langchain-anthropic --python ~/.local/share/uv/tools/jupyterlab/bin/python  # Anthropic provider for Jupyter AI
+
+# Install SWI-Prolog
+RUN sudo apt install -y swi-prolog
+RUN uv pip install git+https://github.com/kayceesrk/jupyter-swi-prolog.git --python ~/.local/share/uv/tools/jupyterlab/bin/python
+RUN mkdir -p ~/.local/share/jupyter/kernels/jswipl
+RUN curl -o ~/.local/share/jupyter/kernels/jswipl/kernel.json https://raw.githubusercontent.com/targodan/jupyter-swi-prolog/master/kernel.json
+
+WORKDIR /cs3100_iitm
+
+# Default command to start JupyterLab
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

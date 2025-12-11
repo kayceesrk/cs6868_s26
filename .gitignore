@@ -1,0 +1,13 @@
+*~
+*.ipynb_checkpoints
+*.swp
+_site
+.env
+.Trash-*
+.venv/
+*.cmi
+*.cmo
+*.cmt
+*.cmti
+temp/
+preview/
