@@ -1,0 +1,11 @@
+(executable
+ (name prime_sequential)
+ (libraries unix))
+
+(executable
+ (name prime_ranges)
+ (libraries unix))
+
+(executable
+ (name prime_counter)
+ (libraries unix))
