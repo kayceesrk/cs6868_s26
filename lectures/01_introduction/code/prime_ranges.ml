@@ -6,6 +6,8 @@ let is_prime n =
   else if n mod 2 = 0 then false
   else
     let rec check_divisor d =
+      (* If n has a divisor d > sqrt(n), then it must also have a corresponding
+         divisor n/d < sqrt(n). *)
       if d * d > n then true
       else if n mod d = 0 then false
       else check_divisor (d + 2)

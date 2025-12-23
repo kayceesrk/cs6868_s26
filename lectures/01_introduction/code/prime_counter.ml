@@ -19,6 +19,16 @@ let create_counter initial_value =
 let get_and_increment counter =
   Atomic.fetch_and_add counter 1
 
+let create_counter initial_value =
+  (ref initial_value, Mutex.create ())
+
+let get_and_increment (counter_ref, mutex) =
+  Mutex.lock mutex;
+  let value = !counter_ref in
+  counter_ref := value + 1;
+  Mutex.unlock mutex;
+  value
+
 let print_primes_dynamic counter limit do_print =
   let rec loop () =
     let i = get_and_increment counter in

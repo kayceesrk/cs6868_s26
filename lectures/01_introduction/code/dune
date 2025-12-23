@@ -9,3 +9,9 @@
 (executable
  (name prime_counter)
  (libraries unix))
+
+(executable
+ (name fib))
+
+(executable
+ (name fib_twice))
