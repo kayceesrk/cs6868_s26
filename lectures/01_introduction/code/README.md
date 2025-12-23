@@ -1,10 +1,61 @@
-# Prime Number Programs - OCaml 5 Domains
+# Parallel Programming Examples - OCaml 5 Domains
 
-This directory contains three implementations of prime number printers demonstrating different parallelization strategies using OCaml 5 domains.
+This directory contains implementations demonstrating different parallelization strategies using OCaml 5 domains.
 
 ## Programs
 
-### 1. Sequential Version (`prime_sequential.ml`)
+### Fibonacci Examples
+
+Simple examples demonstrating basic parallel computation with OCaml 5 domains:
+
+Simple examples demonstrating basic parallel computation with OCaml 5 domains:
+
+#### 1. Sequential Fibonacci (`fib.ml`)
+A basic sequential Fibonacci implementation using naive recursion.
+
+**Usage:**
+```bash
+dune exec -- ./fib.exe <n>
+```
+
+**Example:**
+```bash
+dune exec -- ./fib.exe 42
+```
+
+#### 2. Parallel Fibonacci (`fib_twice.ml`)
+Spawns two domains to compute the same Fibonacci number in parallel, demonstrating basic domain usage.
+
+**Usage:**
+```bash
+dune exec -- ./fib_twice.exe <n>
+```
+
+**Example:**
+```bash
+dune exec -- ./fib_twice.exe 42
+```
+
+**Benchmarking Fibonacci:**
+```bash
+# Compare sequential vs parallel (note: naive parallel fib may not be faster!)
+hyperfine --warmup 3 \
+  'dune exec -- ./fib.exe 42' \
+  'dune exec -- ./fib_twice.exe 42'
+
+# With custom names
+hyperfine --warmup 3 \
+  --command-name 'sequential' 'dune exec -- ./fib.exe 42' \
+  --command-name 'parallel-2d' 'dune exec -- ./fib_twice.exe 42'
+```
+
+**Note**: The parallel version spawns 2 domains computing the same value independently. This is intentionally inefficient to demonstrate domain spawning overhead and the importance of proper parallelization strategies.
+
+### Prime Number Printers
+
+Three implementations of prime number printers with different parallelization approaches:
+
+#### 1. Sequential Version (`prime_sequential.ml`)
 A baseline sequential implementation that prints all prime numbers up to a given limit.
 
 **Usage:**
@@ -17,7 +68,7 @@ dune exec ./prime_sequential.exe <limit>
 dune exec ./prime_sequential.exe 10000
 ```
 
-### 2. Static Range-Based Parallel (`prime_ranges.ml`)
+#### 2. Static Range-Based Parallel (`prime_ranges.ml`)
 A parallel implementation where the work is statically divided into ranges. Each domain processes a predetermined, non-overlapping range of numbers.
 
 **Characteristics:**
@@ -35,7 +86,7 @@ dune exec ./prime_ranges.exe <limit> <num_domains>
 dune exec ./prime_ranges.exe 10000 4
 ```
 
-### 3. Dynamic Counter-Based Parallel (`prime_counter.ml`)
+#### 3. Dynamic Counter-Based Parallel (`prime_counter.ml`)
 A parallel implementation where domains dynamically fetch work from a shared, thread-safe counter. Each domain gets the next number to check from the counter and continues until all numbers are processed.
 
 **Characteristics:**
@@ -54,9 +105,9 @@ dune exec ./prime_counter.exe <limit> <num_domains>
 dune exec ./prime_counter.exe 10000 4
 ```
 
-## Optional Printing Flag
+## Optional Printing Flag (Prime Programs Only)
 
-All programs support an optional printing flag to control output. By default, primes are not printed (for faster benchmarking). Use `--print` or `-p` to enable output.
+Prime number programs support an optional printing flag to control output. By default, primes are not printed (for faster benchmarking). Use `--print` or `-p` to enable output.
 
 **Without printing (default):**
 ```bash
