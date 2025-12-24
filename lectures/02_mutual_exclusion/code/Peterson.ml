@@ -27,8 +27,7 @@ module Peterson : LOCK = struct
       ()
     done
 
-  let unlock thread_id =
-    flag.(thread_id) <- false
+  let unlock thread_id = flag.(thread_id) <- false
 end
 
 (* Test program with two threads *)
@@ -40,7 +39,7 @@ let thread_work thread_id =
     Peterson.lock thread_id;
     (* Critical section *)
     incr counter;
-    Peterson.unlock thread_id;
+    Peterson.unlock thread_id
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -60,5 +59,4 @@ let () =
 
   if final_count = 2 * iterations then
     Printf.printf "✓ Success: Mutual exclusion works!\n%!"
-  else
-    Printf.printf "✗ Failed: Race condition detected!\n%!"
+  else Printf.printf "✗ Failed: Race condition detected!\n%!"

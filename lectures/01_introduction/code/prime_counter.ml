@@ -13,29 +13,14 @@ let is_prime n =
     check_divisor 3
 
 (* Thread-safe counter using atomic operations *)
-let create_counter initial_value =
-  Atomic.make initial_value
-
-let get_and_increment counter =
-  Atomic.fetch_and_add counter 1
-
-let create_counter initial_value =
-  (ref initial_value, Mutex.create ())
-
-let get_and_increment (counter_ref, mutex) =
-  Mutex.lock mutex;
-  let value = !counter_ref in
-  counter_ref := value + 1;
-  Mutex.unlock mutex;
-  value
+let create_counter initial_value = Atomic.make initial_value
+let get_and_increment counter = Atomic.fetch_and_add counter 1
 
 let print_primes_dynamic counter limit do_print =
   let rec loop () =
     let i = get_and_increment counter in
     if i <= limit then begin
-      if is_prime i then (
-        if do_print then Printf.printf "%d\n" i
-      );
+      if is_prime i then if do_print then Printf.printf "%d\n" i;
       loop ()
     end
   in
@@ -45,7 +30,8 @@ let () =
   let limit = int_of_string Sys.argv.(1) in
   let num_domains = int_of_string Sys.argv.(2) in
   let do_print =
-    if Array.length Sys.argv > 3 then Sys.argv.(3) = "--print" || Sys.argv.(3) = "-p"
+    if Array.length Sys.argv > 3 then
+      Sys.argv.(3) = "--print" || Sys.argv.(3) = "-p"
     else false
   in
 
