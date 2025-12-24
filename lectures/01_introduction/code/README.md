@@ -1,6 +1,7 @@
 # Parallel Programming Examples - OCaml 5 Domains
 
-This directory contains implementations demonstrating different parallelization strategies using OCaml 5 domains.
+This directory contains implementations demonstrating different parallelization
+strategies using OCaml 5 domains.
 
 ## Programs
 

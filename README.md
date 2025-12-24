@@ -42,4 +42,25 @@ git clone https://github.com/kayceesrk/cs6868_s26
 cd cs6868_s26
 ```
 
+### Software Setup
+
+We will use OCaml 5.4 or later. Follow the instructions at
+https://ocaml.org/docs/install.html to install OCaml and the platform tools. Use
+Linux, macOS, *BSD or WSL on Windows for best compatibility. Some of the later
+lectures will need Linux tools. At IITM, you can use the DCF machines, which
+have the tools installed.
+
+Below is the instruction for Linux/macOS systems.
+
+```bash
+bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
+opam init # initialize opam
+opam switch create 5.4.0 # create a new switch with OCaml 5.4.0
+opam install ocaml-lsp-server odoc ocamlformat utop dune # install useful packages
+```
+
+It is recommended that you use VSCode with the [OCaml
+Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
+extension for development.
+
 Refer to individual lecture directories for specific setup instructions.
