@@ -15,15 +15,14 @@ let is_prime n =
 
 let print_primes limit do_print =
   for i = 1 to limit do
-    if is_prime i then (
-      if do_print then Printf.printf "%d\n" i
-    )
+    if is_prime i then if do_print then Printf.printf "%d\n" i
   done
 
 let () =
   let limit = int_of_string Sys.argv.(1) in
   let do_print =
-    if Array.length Sys.argv > 2 then Sys.argv.(2) = "--print" || Sys.argv.(2) = "-p"
+    if Array.length Sys.argv > 2 then
+      Sys.argv.(2) = "--print" || Sys.argv.(2) = "-p"
     else false
   in
   let start_time = Unix.gettimeofday () in

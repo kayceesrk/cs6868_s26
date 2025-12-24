@@ -15,3 +15,7 @@
 
 (executable
  (name fib_twice))
+
+(executable
+ (name prod_cons)
+ (libraries unix))

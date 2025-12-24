@@ -18,15 +18,15 @@ module LockOne : LOCK = struct
 
   let lock thread_id =
     let i = thread_id in
-    let j = 1 - i in  (* Other thread: if i=0 then j=1, if i=1 then j=0 *)
+    let j = 1 - i in
+    (* Other thread: if i=0 then j=1, if i=1 then j=0 *)
     flag.(i) <- true;
     (* Wait while the other thread wants to enter critical section *)
     while flag.(j) do
       ()
     done
 
-  let unlock thread_id =
-    flag.(thread_id) <- false
+  let unlock thread_id = flag.(thread_id) <- false
 end
 
 (* Test program with two threads *)
@@ -42,8 +42,7 @@ let thread_work thread_id =
     incr counter;
     (* Unix.sleepf 0.001; *)
     Printf.printf "Thread %d: LEAVING critical section\n%!" thread_id;
-    LockOne.unlock thread_id;
-    (* Unix.sleepf 0.001; *)
+    LockOne.unlock thread_id (* Unix.sleepf 0.001; *)
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -63,5 +62,4 @@ let () =
 
   if final_count = 2 * iterations then
     Printf.printf "✓ Success: Mutual exclusion works!\n%!"
-  else
-    Printf.printf "✗ Failed: Race condition detected!\n%!"
+  else Printf.printf "✗ Failed: Race condition detected!\n%!"

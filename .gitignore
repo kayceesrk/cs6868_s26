@@ -11,3 +11,6 @@ _site
 *.cmti
 temp/
 preview/
+.DS_Store
+_build/
+_scratch/

@@ -18,9 +18,10 @@ module LockTwo : LOCK = struct
 
   let lock thread_id =
     let i = thread_id in
-    victim := i;             (* let the other go first *)
+    victim := i;
+    (* let the other go first *)
     while !victim = i do
-      ()                     (* spin *)
+      () (* spin *)
     done
 
   let unlock _thread_id = ()
@@ -37,7 +38,7 @@ let thread_work thread_id =
     Printf.printf "Thread %d: ENTERED critical section\n%!" thread_id;
     incr counter;
     Printf.printf "Thread %d: LEAVING critical section\n%!" thread_id;
-    LockTwo.unlock thread_id;
+    LockTwo.unlock thread_id
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -57,5 +58,4 @@ let () =
 
   if final_count = 2 * iterations then
     Printf.printf "✓ Success: Mutual exclusion works!\n%!"
-  else
-    Printf.printf "✗ Failed: Race condition detected!\n%!"
+  else Printf.printf "✗ Failed: Race condition detected!\n%!"
