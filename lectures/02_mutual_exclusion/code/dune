@@ -17,3 +17,8 @@
  (name Bakery)
  (libraries unix)
  (modes exe))
+
+(executable
+ (name Counter)
+ (libraries unix)
+ (modes exe))

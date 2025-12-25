@@ -8,8 +8,11 @@
  *)
 
 module type LOCK = sig
-  val lock : int -> unit
-  val unlock : int -> unit
+  val lock : unit -> unit
+  (** Acquire the lock, blocking until available *)
+
+  val unlock : unit -> unit
+  (** Release the lock *)
 end
 
 module Peterson : LOCK = struct
@@ -17,8 +20,8 @@ module Peterson : LOCK = struct
   let flag = [| false; false |]
   let victim = ref 0
 
-  let lock thread_id =
-    let i = thread_id in
+  let lock () =
+    let i = (Domain.self () :> int) - 1 in
     let j = 1 - i in
     flag.(i) <- true;
     victim := i;
@@ -27,19 +30,22 @@ module Peterson : LOCK = struct
       ()
     done
 
-  let unlock thread_id = flag.(thread_id) <- false
+  let unlock () =
+    let i = (Domain.self () :> int) - 1 in
+    flag.(i) <- false
 end
 
 (* Test program with two threads *)
 let counter = ref 0
 let iterations = 100
 
-let thread_work thread_id =
+let thread_work () =
+  let thread_id = (Domain.self () :> int) - 1 in
   for _ = 1 to iterations do
-    Peterson.lock thread_id;
+    Peterson.lock ();
     (* Critical section *)
     incr counter;
-    Peterson.unlock thread_id
+    Peterson.unlock ()
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -47,8 +53,8 @@ let () =
   Printf.printf "Peterson Lock Test: Two threads incrementing a counter\n%!";
   Printf.printf "Each thread will increment %d times\n%!" iterations;
 
-  let d1 = Domain.spawn (fun () -> thread_work 0) in
-  let d2 = Domain.spawn (fun () -> thread_work 1) in
+  let d1 = Domain.spawn (fun () -> thread_work ()) in
+  let d2 = Domain.spawn (fun () -> thread_work ()) in
 
   Domain.join d1;
   Domain.join d2;

@@ -8,16 +8,20 @@
  *)
 
 module type LOCK = sig
-  val lock : int -> unit
-  val unlock : int -> unit
+  val lock : unit -> unit
+  (** Acquire the lock, blocking until available *)
+
+  val unlock : unit -> unit
+  (** Release the lock *)
 end
 
 module LockOne : LOCK = struct
   (* Two boolean flags, one per thread *)
   let flag = [| false; false |]
 
-  let lock thread_id =
-    let i = thread_id in
+  let lock () =
+    let i = (Domain.self () :> int) - 1 in
+    (* ^^ Returns 0 or 1 if you spawn only two domains *)
     let j = 1 - i in
     (* Other thread: if i=0 then j=1, if i=1 then j=0 *)
     flag.(i) <- true;
@@ -26,23 +30,28 @@ module LockOne : LOCK = struct
       ()
     done
 
-  let unlock thread_id = flag.(thread_id) <- false
+  let unlock () =
+    let i = (Domain.self () :> int) - 1 in
+    flag.(i) <- false
 end
 
 (* Test program with two threads *)
 let counter = ref 0
 let iterations = 10
+(* Will only work for small iteration counts. Try increasing the number to
+   10000. Why? *)
 
-let thread_work thread_id =
+let thread_work () =
+  let thread_id = (Domain.self () :> int) - 1 in
   for i = 1 to iterations do
     Printf.printf "Thread %d: attempting lock (iteration %d)\n%!" thread_id i;
-    LockOne.lock thread_id;
+    LockOne.lock ();
     Printf.printf "Thread %d: ENTERED critical section\n%!" thread_id;
     (* Critical section *)
     incr counter;
     (* Unix.sleepf 0.001; *)
     Printf.printf "Thread %d: LEAVING critical section\n%!" thread_id;
-    LockOne.unlock thread_id (* Unix.sleepf 0.001; *)
+    LockOne.unlock () (* Unix.sleepf 0.001; *)
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -50,8 +59,8 @@ let () =
   Printf.printf "LockOne Test: Two threads incrementing a counter\n%!";
   Printf.printf "Each thread will increment %d times\n%!" iterations;
 
-  let d1 = Domain.spawn (fun () -> thread_work 0) in
-  let d2 = Domain.spawn (fun () -> thread_work 1) in
+  let d1 = Domain.spawn (fun () -> thread_work ()) in
+  let d2 = Domain.spawn (fun () -> thread_work ()) in
 
   Domain.join d1;
   Domain.join d2;
