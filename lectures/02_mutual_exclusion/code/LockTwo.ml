@@ -8,37 +8,41 @@
  *)
 
 module type LOCK = sig
-  val lock : int -> unit
-  val unlock : int -> unit
+  val lock : unit -> unit
+  (** Acquire the lock, blocking until available *)
+
+  val unlock : unit -> unit
+  (** Release the lock *)
 end
 
 module LockTwo : LOCK = struct
   (* single shared 'victim' variable *)
   let victim = ref 0
 
-  let lock thread_id =
-    let i = thread_id in
+  let lock () =
+    let i = (Domain.self () :> int) - 1 in
     victim := i;
     (* let the other go first *)
     while !victim = i do
       () (* spin *)
     done
 
-  let unlock _thread_id = ()
+  let unlock () = ()
 end
 
 (* Test program with two threads *)
 let counter = ref 0
 let iterations = 10
 
-let thread_work thread_id =
+let thread_work () =
+  let thread_id = (Domain.self () :> int) - 1 in
   for i = 1 to iterations do
     Printf.printf "Thread %d: attempting lock (iteration %d)\n%!" thread_id i;
-    LockTwo.lock thread_id;
+    LockTwo.lock ();
     Printf.printf "Thread %d: ENTERED critical section\n%!" thread_id;
     incr counter;
     Printf.printf "Thread %d: LEAVING critical section\n%!" thread_id;
-    LockTwo.unlock thread_id
+    LockTwo.unlock ()
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -46,8 +50,8 @@ let () =
   Printf.printf "LockTwo Test: Two threads incrementing a counter\n%!";
   Printf.printf "Each thread will increment %d times\n%!" iterations;
 
-  let d1 = Domain.spawn (fun () -> thread_work 0) in
-  let d2 = Domain.spawn (fun () -> thread_work 1) in
+  let d1 = Domain.spawn (fun () -> thread_work ()) in
+  let d2 = Domain.spawn (fun () -> thread_work ()) in
 
   Domain.join d1;
   Domain.join d2;

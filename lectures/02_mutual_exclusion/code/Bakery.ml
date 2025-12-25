@@ -8,55 +8,57 @@
  * Satisfies mutual exclusion, deadlock-freedom, and fairness.
  *)
 
-module type N_THREAD_LOCK = sig
+module type BAKERY = sig
   type t
+  (** Abstract lock type *)
 
   val create : int -> t
-  val lock : t -> int -> unit
-  val unlock : t -> int -> unit
+  (** Create a new bakery lock for n threads *)
+
+  val lock : t -> unit
+  (** Acquire the lock, blocking until available *)
+
+  val unlock : t -> unit
+  (** Release the lock *)
 end
 
-module Bakery : N_THREAD_LOCK = struct
-  type label = { counter : int; id : int }
-  type t = { flag : bool array; label : label array; n_threads : int }
+(* Helper: exists with indices on two arrays *)
+let exists2i f arr1 arr2 =
+  let n = Array.length arr1 in
+  let rec loop i =
+    if i >= n then false else if f i arr1.(i) arr2.(i) then true else loop (i + 1)
+  in
+  loop 0
 
-  (* Helper: returns true if l1 < l2 in lexicographic order *)
-  let label_less_than l1 l2 =
-    l1.counter < l2.counter || (l1.counter = l2.counter && l1.id < l2.id)
+module Bakery : BAKERY = struct
+  type t = { flag : bool array; label : int array }
+  let create n_threads =
+    { flag = Array.make n_threads false; label = Array.make n_threads 0 }
 
   (* Helper: find the maximum counter value across all labels *)
-  let max_counter labels =
-    Array.fold_left (fun acc label -> max acc label.counter) 0 labels
+  let max_counter labels = Array.fold_left max 0 labels
 
   (* Helper: check if there's a conflict with any other thread *)
-  let conflict lock me =
-    let rec check i =
-      if i >= lock.n_threads then false
-      else if
-        i <> me && lock.flag.(i)
-        && label_less_than lock.label.(i) lock.label.(me)
-      then true
-      else check (i + 1)
-    in
-    check 0
+  let conflict bakery me my_label =
+    exists2i
+      (fun i flag label ->
+        i <> me && flag && (label < my_label || (label = my_label && i < me)))
+      bakery.flag bakery.label
 
-  let create n_threads =
-    {
-      flag = Array.make n_threads false;
-      label = Array.init n_threads (fun id -> { counter = 0; id });
-      n_threads;
-    }
-
-  let lock bakery thread_id =
+  let lock bakery =
+    let thread_id = (Domain.self () :> int) - 1 in
     bakery.flag.(thread_id) <- true;
     let max = max_counter bakery.label in
-    bakery.label.(thread_id) <- { counter = max + 1; id = thread_id };
+    let my_label = max + 1 in
+    bakery.label.(thread_id) <- my_label;
     (* Wait while there's a conflict *)
-    while conflict bakery thread_id do
+    while conflict bakery thread_id my_label do
       ()
     done
 
-  let unlock bakery thread_id = bakery.flag.(thread_id) <- false
+  let unlock bakery =
+    let thread_id = (Domain.self () :> int) - 1 in
+    bakery.flag.(thread_id) <- false
 end
 
 (* Test program with multiple threads *)
@@ -64,12 +66,13 @@ let counter = ref 0
 let iterations = 100
 let n_threads = 4
 
-let thread_work bakery thread_id =
+let thread_work bakery =
+  let thread_id = (Domain.self () :> int) - 1 in
   for _ = 1 to iterations do
-    Bakery.lock bakery thread_id;
+    Bakery.lock bakery;
     (* Critical section *)
     incr counter;
-    Bakery.unlock bakery thread_id
+    Bakery.unlock bakery
   done;
   Printf.printf "Thread %d completed\n%!" thread_id
 
@@ -82,8 +85,7 @@ let () =
 
   (* Spawn n_threads domains *)
   let domains =
-    Array.init n_threads (fun i ->
-        Domain.spawn (fun () -> thread_work bakery i))
+    Array.init n_threads (fun _i -> Domain.spawn (fun () -> thread_work bakery))
   in
 
   (* Wait for all domains to complete *)
