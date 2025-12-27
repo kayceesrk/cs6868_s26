@@ -1,0 +1,29 @@
+[2Krandom seed: 134679952
+
+--- [31;1mFailure[0m --------------------------------------------------------------------
+
+Test Lock-free queue (negative test) failed (10 shrink steps):
+
+                        |                
+                     enq t 0             
+                        |                
+             .---------------------.
+             |                     |                
+           deq t                 deq t              
+
+
++++ [34;1mMessages[0m ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Messages for test Lock-free queue (negative test):
+
+  Results incompatible with sequential execution
+
+                                |                          
+                        enq t 0 : Ok (())                  
+                                |                          
+             .------------------------------------.
+             |                                    |                          
+      deq t : Ok (0)                       deq t : Ok (0)                    
+
+================================================================================
+[31;1mfailure[0m (1 tests failed, 0 tests errored, ran 1 tests)

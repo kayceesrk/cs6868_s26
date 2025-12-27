@@ -1,0 +1,12 @@
+(executable
+ (name cse)
+ (libraries unix)
+ (modes exe)
+ (ocamlopt_flags (:standard -S -O3)))
+
+; Requires OCaml compiler with TSAN support
+; Install with: opam switch create 5.4.0+tsan ocaml-option-tsan
+(executable
+ (name peterson_race)
+ (libraries unix)
+ (modes exe))
