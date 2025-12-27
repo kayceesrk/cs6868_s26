@@ -105,7 +105,7 @@ dune exec ./peterson_race.exe
 
 The program will show TSAN warnings about data races in the `lock` function:
 
-```
+```text
 Testing Peterson's lock with 10000 iterations per domain...
 ==================
 WARNING: ThreadSanitizer: data race (pid=...)
