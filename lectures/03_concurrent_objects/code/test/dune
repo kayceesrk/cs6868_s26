@@ -1,0 +1,19 @@
+(executable
+ (name test_bounded)
+ (modules test_bounded)
+ (libraries concurrent_queues))
+
+(executable
+ (name test_lockfree)
+ (modules test_lockfree)
+ (libraries concurrent_queues))
+
+(executable
+ (name qcheck_lockfree)
+ (modules qcheck_lockfree)
+ (libraries concurrent_queues qcheck-lin.domain))
+
+(executable
+ (name qcheck_bounded)
+ (modules qcheck_bounded)
+ (libraries concurrent_queues qcheck-lin.domain))
