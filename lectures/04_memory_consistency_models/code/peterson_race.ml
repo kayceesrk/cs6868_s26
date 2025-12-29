@@ -41,18 +41,18 @@ end
 let counter = ref 0
 
 let thread_work () =
-  for _ = 1 to 10000 do
+  for _ = 1 to 1_000_000 do
     Peterson.lock ();
     incr counter;
     Peterson.unlock ()
   done
 
 let () =
-  Printf.printf "Testing Peterson's lock with 10000 iterations per domain...\n%!";
+  Printf.printf "Testing Peterson's lock with 1_000_000 iterations per domain...\n%!";
 
   let d1 = Domain.spawn thread_work in
   let d2 = Domain.spawn thread_work in
   Domain.join d1;
   Domain.join d2;
 
-  Printf.printf "Final counter value: %d (expected: 20000)\n" !counter
+  Printf.printf "Final counter value: %d (expected: 2_000_000)\n" !counter
