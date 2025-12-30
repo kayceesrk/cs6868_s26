@@ -16,7 +16,8 @@ This directory contains OCaml implementations of various spinlock algorithms fro
 
 - **Benchmark.ml** - Shared benchmarking utilities
 - **test_*.ml** - Individual correctness tests for each lock
-- **benchmark_all_locks.ml** - Comprehensive performance comparison
+- **benchmark_throughput.ml** - Throughput comparison (ops/sec)
+- **benchmark_time.ml** - Time to increment shared counter (demonstrates lock contention)
 
 ### Build System
 
@@ -166,11 +167,14 @@ dune exec ./test_alock.exe
 ### Run comprehensive benchmark
 
 ```bash
-# Compare all locks with 1-8 threads
-dune exec ./benchmark_all_locks.exe
+# Compare all locks with 1-8 threads (throughput in ops/sec)
+dune exec ./benchmark_throughput.exe
 
 # Custom configuration
-dune exec ./benchmark_all_locks.exe -- --iterations 100000 --runs 10
+dune exec ./benchmark_throughput.exe -- --iterations 100000 --runs 10
+
+# Shared counter benchmark (execution time with lock contention)
+dune exec ./benchmark_time.exe -- --locks ttas,backoff --increments 1000000 --max-threads 8
 ```
 
 ## Benchmark Results

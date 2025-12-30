@@ -1,7 +1,7 @@
-(* benchmark_sequential_bottleneck.ml
+(* benchmark_time.ml
  * 
- * Demonstrates Amdahl's Law - no speedup when there's a sequential bottleneck
- * Measures execution time with increasing threads when critical section dominates
+ * Measures time to increment a shared counter a fixed total number of times
+ * Work is divided across threads to show parallelization speedup/slowdown
  *)
 
 module type LOCK = sig
@@ -12,33 +12,15 @@ module type LOCK = sig
   val name : string
 end
 
-(* Simulate work inside critical section (sequential bottleneck) *)
-let sequential_work () =
-  let sum = ref 0 in
-  for i = 1 to 10000 do
-    sum := !sum + i
-  done;
-  !sum
-
-(* Simulate minimal parallel work outside critical section *)
-let parallel_work () =
-  let sum = ref 0 in
-  for i = 1 to 100 do
-    sum := !sum + i
-  done;
-  !sum
-
-let benchmark_with_bottleneck (module L : LOCK) num_threads iterations =
+let benchmark_counter (module L : LOCK) num_threads total_increments =
   let lock = L.create () in
+  let counter = ref 0 in
+  let increments_per_thread = total_increments / num_threads in
   
   let thread_work () =
-    for _ = 1 to iterations do
-      (* Small amount of parallel work *)
-      let _ = parallel_work () in
-      
-      (* Large sequential bottleneck - all threads wait here *)
+    for _ = 1 to increments_per_thread do
       L.lock lock;
-      let _ = sequential_work () in  (* Significant work inside lock *)
+      counter := !counter + 1;
       L.unlock lock;
     done
   in
@@ -83,26 +65,26 @@ let parse_locks lock_str =
   ) names
 
 let () =
-  let iterations = ref 10000 in
+  let total_increments = ref 1_000_000 in
   let runs = ref 5 in
   let max_threads = ref 8 in
   let locks_str = ref "ttas" in
   
   let speclist = [
     ("--locks", Arg.Set_string locks_str, "Comma-separated list of locks (default: ttas; options: tas,ttas,backoff,alock)");
-    ("--iterations", Arg.Set_int iterations, "Iterations per thread (default: 10000)");
+    ("--increments", Arg.Set_int total_increments, "Total counter increments (default: 1000000)");
     ("--max-threads", Arg.Set_int max_threads, "Maximum number of threads (default: 8)");
     ("--runs", Arg.Set_int runs, "Number of runs (default: 5)");
   ] in
   
-  Arg.parse speclist (fun _ -> ()) "Benchmark sequential bottleneck (Amdahl's Law)";
+  Arg.parse speclist (fun _ -> ()) "Benchmark shared counter increments";
   
   let locks = parse_locks !locks_str in
   
-  Printf.printf "=== Sequential Bottleneck Benchmark (Amdahl's Law) ===\n\n%!";
-  Printf.printf "Configuration: %d iterations/thread × %d runs, up to %d threads\n" 
-    !iterations !runs !max_threads;
-  Printf.printf "Critical section has 100x more work than parallel section\n\n%!";
+  Printf.printf "=== Shared Counter Benchmark ===\n\n%!";
+  Printf.printf "Configuration: %d total increments × %d runs, up to %d threads\n" 
+    !total_increments !runs !max_threads;
+  Printf.printf "Work is divided evenly across threads\n\n%!";
   
   (* Get lock names for header *)
   let lock_names = List.map (fun lock_mod ->
@@ -110,11 +92,11 @@ let () =
     L.name
   ) locks in
   
-  (* Get baselines for all locks *)
+  (* Get baselines for all locks (1 thread) *)
   let baselines = List.map (fun lock_mod ->
     let times_1 = List.init !runs (fun _ -> 
       Gc.full_major ();
-      benchmark_with_bottleneck lock_mod 1 !iterations
+      benchmark_counter lock_mod 1 !total_increments
     ) in
     List.fold_left (+.) 0.0 times_1 /. float_of_int !runs
   ) locks in
@@ -123,10 +105,10 @@ let () =
   (* Print header *)
   Printf.printf "%-10s" "Threads";
   List.iter (fun name -> Printf.printf " %-12s" (name ^ "(s)")) lock_names;
-  Printf.printf " %-12s\n%!" "Ideal(s)";
+  Printf.printf " %-12s %-12s\n%!" "Ideal(s)" "Speedup";
   
   (* Print separator *)
-  let separator_width = 10 + (List.length lock_names * 13) + 13 in
+  let separator_width = 10 + (List.length lock_names * 13) + 13 + 13 in
   Printf.printf "%s\n%!" (String.make separator_width '-');
   
   (* Benchmark each thread count *)
@@ -134,17 +116,24 @@ let () =
     Printf.printf "%-10d" threads;
     
     (* Run each lock at this thread count *)
-    List.iter (fun lock_mod ->
+    let times = List.map (fun lock_mod ->
       let times = List.init !runs (fun _ -> 
         Gc.full_major ();
-        benchmark_with_bottleneck lock_mod threads !iterations
+        benchmark_counter lock_mod threads !total_increments
       ) in
-      let avg_time = List.fold_left (+.) 0.0 times /. float_of_int !runs in
-      Printf.printf " %-12.3f" avg_time;
-    ) locks;
+      List.fold_left (+.) 0.0 times /. float_of_int !runs
+    ) locks in
     
-    (* Print ideal time (stays constant) *)
-    Printf.printf " %-12.3f\n%!" avg_baseline;
+    (* Print times for each lock *)
+    List.iter (fun avg_time ->
+      Printf.printf " %-12.3f" avg_time;
+    ) times;
+    
+    (* Print ideal time (stays constant - all work is serialized) and actual average speedup *)
+    let ideal_time = avg_baseline in  (* No parallelizable work, ideal time = baseline *)
+    let avg_time = List.fold_left (+.) 0.0 times /. float_of_int (List.length times) in
+    let speedup = avg_baseline /. avg_time in
+    Printf.printf " %-12.3f %-12.2fx\n%!" ideal_time speedup;
   done;
   
-  Printf.printf "\nNote: Ideal stays constant - sequential bottleneck prevents any speedup\n%!"
+  Printf.printf "\nNote: Ideal time stays constant - all work is serialized under the lock\n%!"

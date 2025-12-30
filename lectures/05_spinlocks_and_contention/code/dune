@@ -27,14 +27,14 @@
  (modes exe))
 
 (executable
- (name benchmark_all_locks)
+ (name benchmark_throughput)
  (libraries unix spinlocks)
- (modules benchmark_all_locks)
+ (modules benchmark_throughput)
  (modes exe))
 
 (executable
- (name benchmark_sequential_bottleneck)
+ (name benchmark_time)
  (libraries unix spinlocks)
- (modules benchmark_sequential_bottleneck)
+ (modules benchmark_time)
  (modes exe))
 
