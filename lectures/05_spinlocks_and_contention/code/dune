@@ -87,6 +87,18 @@
  (modes exe))
 
 (executable
+ (name profile_alock)
+ (libraries unix spinlocks)
+ (modules profile_alock)
+ (modes exe))
+
+(executable
+ (name profile_backoff)
+ (libraries unix spinlocks)
+ (modules profile_backoff)
+ (modes exe))
+
+(executable
  (name benchmark_alock)
  (libraries unix spinlocks)
  (modules benchmark_alock)
