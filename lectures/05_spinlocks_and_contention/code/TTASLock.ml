@@ -1,7 +1,7 @@
 (* TTASLock.ml
  *
  * Test-Test-And-Set Lock Implementation
- * 
+ *
  * This is an improved version of TAS lock that reduces cache coherence traffic.
  * The key insight: read the lock state before attempting to acquire it.
  *
@@ -37,7 +37,7 @@ module TTASLock : Lock.LOCK = struct
       while Atomic.get t.state do
         ()
       done;
-      
+
       (* Lock looks free, try to acquire with atomic exchange *)
       (* exchange returns the OLD value:
          - false means lock was free, we got it -> return false to exit while

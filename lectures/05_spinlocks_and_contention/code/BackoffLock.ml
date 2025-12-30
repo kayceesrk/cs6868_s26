@@ -1,7 +1,7 @@
 (* BackoffLock.ml
  *
  * Backoff Lock Implementation
- * 
+ *
  * An improvement over TTAS that adds exponential backoff when contention is detected.
  * When a thread fails to acquire the lock, it backs off for an increasing delay
  * before trying again. This reduces contention and cache coherence traffic.

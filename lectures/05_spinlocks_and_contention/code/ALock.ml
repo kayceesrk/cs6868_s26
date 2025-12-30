@@ -1,7 +1,7 @@
 (* ALock.ml
  *
  * Array Lock (ALock) Implementation
- * 
+ *
  * A queue-based lock where each thread spins on a different array element.
  * This eliminates the cache coherence traffic problem of simple spinlocks.
  *
@@ -53,14 +53,14 @@ end = struct
   let create_with_capacity capacity =
     if capacity <= 0 then
       invalid_arg "ALock capacity must be positive";
-    
+
     (* Create array of atomic booleans using make_contended to prevent false sharing *)
     let flags =
       Array.init capacity (fun i ->
           (* Only slot 0 starts as true (available) *)
           Atomic.make_contended (i = 0))
     in
-    
+
     {
       flags;
       tail = Atomic.make 0;
@@ -77,13 +77,13 @@ end = struct
   let lock t =
     (* Get my slot using atomic fetch-and-increment *)
     let slot = (Atomic.fetch_and_add t.tail 1) mod t.capacity in
-    
+
     (* Store slot in domain-local storage for unlock *)
     Domain.DLS.set t.my_slot slot;
-    
+
     (* Cache the flag reference to avoid repeated array indexing *)
     let my_flag = t.flags.(slot) in
-    
+
     (* Spin on MY flag until it becomes true *)
     (* This is the key: each thread spins on a DIFFERENT location *)
     while not (Atomic.get my_flag) do
@@ -93,18 +93,18 @@ end = struct
   let unlock t =
     (* Get my slot from domain-local storage *)
     let slot = Domain.DLS.get t.my_slot in
-    
+
     if slot = -1 then
       failwith "unlock called without corresponding lock";
-    
+
     (* Cache flag references *)
     let my_flag = t.flags.(slot) in
     let next_slot = (slot + 1) mod t.capacity in
     let next_flag = t.flags.(next_slot) in
-    
+
     (* Clear my flag *)
     Atomic.set my_flag false;
-    
+
     (* Signal the next thread *)
     Atomic.set next_flag true
 end

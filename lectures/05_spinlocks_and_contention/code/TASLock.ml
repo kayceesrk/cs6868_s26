@@ -1,7 +1,7 @@
 (* TASLock.ml
  *
  * Test-And-Set Lock Implementation
- * 
+ *
  * This is the simplest spinlock implementation using atomic test-and-set.
  * It uses a single atomic boolean variable to represent the lock state.
  *

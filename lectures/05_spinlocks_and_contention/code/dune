@@ -1,17 +1,11 @@
 (library
  (name spinlocks)
- (modules Lock Benchmark TASLock TTASLock TTASLockUnsafe BackoffLock ALock ALockNoCpuRelax))
+ (modules Lock Benchmark TASLock TTASLock BackoffLock ALock))
 
 (executable
  (name test_tas)
  (libraries unix spinlocks)
  (modules test_tas)
- (modes exe))
-
-(executable
- (name benchmark_tas)
- (libraries unix spinlocks)
- (modules benchmark_tas)
  (modes exe))
 
 (executable
@@ -21,21 +15,9 @@
  (modes exe))
 
 (executable
- (name benchmark_ttas)
- (libraries unix spinlocks)
- (modules benchmark_ttas)
- (modes exe))
-
-(executable
  (name test_backoff)
  (libraries unix spinlocks)
  (modules test_backoff)
- (modes exe))
-
-(executable
- (name benchmark_backoff)
- (libraries unix spinlocks)
- (modules benchmark_backoff)
  (modes exe))
 
 (executable
@@ -45,79 +27,8 @@
  (modes exe))
 
 (executable
- (name debug_alock)
- (libraries unix spinlocks)
- (modules debug_alock)
- (modes exe))
-
-(executable
- (name debug_alock_progress)
- (libraries unix spinlocks)
- (modules debug_alock_progress)
- (modes exe))
-
-(executable
- (name test_alock_double_capacity)
- (libraries unix spinlocks)
- (modules test_alock_double_capacity)
- (modes exe))
-
-(executable
- (name test_alock_no_relax)
- (libraries unix spinlocks)
- (modules test_alock_no_relax)
- (modes exe))
-
-(executable
- (name test_ttas_unsafe)
- (libraries unix spinlocks)
- (modules test_ttas_unsafe)
- (modes exe))
-
-(executable
- (name compare_ttas_variants)
- (libraries unix spinlocks)
- (modules compare_ttas_variants)
- (modes exe))
-
-(executable
  (name benchmark_all_locks)
  (libraries unix spinlocks)
  (modules benchmark_all_locks)
  (modes exe))
 
-(executable
- (name profile_alock)
- (libraries unix spinlocks)
- (modules profile_alock)
- (modes exe))
-
-(executable
- (name profile_backoff)
- (libraries unix spinlocks)
- (modules profile_backoff)
- (modes exe))
-
-(executable
- (name benchmark_alock)
- (libraries unix spinlocks)
- (modules benchmark_alock)
- (modes exe))
-
-(executable
- (name benchmark_alock_custom)
- (libraries unix spinlocks)
- (modules benchmark_alock_custom)
- (modes exe))
-
-(executable
- (name tune_backoff)
- (libraries unix spinlocks)
- (modules tune_backoff)
- (modes exe))
-
-(executable
- (name compare_locks)
- (libraries unix spinlocks)
- (modules compare_locks)
- (modes exe))
