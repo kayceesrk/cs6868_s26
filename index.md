@@ -62,7 +62,7 @@ We will use **OCaml 5.4 or later**. Follow the [installation instructions](https
 bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 opam init
 opam switch create 5.4.0
-opam install ocaml-lsp-server odoc ocamlformat utop dune
+opam install ocaml-lsp-server ocamlformat utop domainslib qcheck-lin qcheck-stm
 ```
 
 We recommend using VSCode with the [OCaml Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform) extension.

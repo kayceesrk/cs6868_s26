@@ -56,7 +56,7 @@ Below is the instruction for Linux/macOS systems.
 bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 opam init # initialize opam
 opam switch create 5.4.0 # create a new switch with OCaml 5.4.0
-opam install ocaml-lsp-server odoc ocamlformat utop dune # install useful packages
+opam install ocaml-lsp-server ocamlformat utop domainslib qcheck-lin qcheck-stm # install course packages
 ```
 
 It is recommended that you use VSCode with the [OCaml
