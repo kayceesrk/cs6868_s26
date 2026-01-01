@@ -6,67 +6,130 @@ permalink: /resources/
 
 # Software
 
-The course comes with a handy [docker
-image](https://hub.docker.com/r/kayceesrk/cs3100_iitm) which contains the
-necessary software to run OCaml, SWI-Prolog and the Jupyter notebooks, primarily
-through which the course is taught. The instructions for running the Jupyter
-notebooks is [here](https://github.com/kayceesrk/cs3100_m25).
+## OCaml 5
 
-## Docker
+This course requires **OCaml 5.4 or later** for native support of parallelism (domains) and concurrency (effect handlers).
 
-Docker is a free software and is supported
-on all major platforms. The installation instructions for Docker is available
-[here](https://docs.docker.com/install/#supported-platforms). 
+### Installation
 
-## OCaml
+Follow the official [OCaml installation guide](https://ocaml.org/docs/install.html). We recommend using `opam`, the OCaml package manager.
 
-You don't need a local installation of OCaml on your machine for the course. The
-docker image is enough. If you want to, check out
-[ocaml.org](https://ocaml.org/).
+**Quick Start (Linux/macOS/WSL):**
 
-## SWI-Prolog
+```bash
+bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
+opam init
+opam switch create 5.4.0
+opam install ocaml-lsp-server odoc ocamlformat utop dune
+```
 
-You don't need a local installation of SWI-Prolog on your machine for the
-course. The docker image is enough. If you want to, SWI-Prolog installation
-instructions are [here](https://www.swi-prolog.org/Download.html).
+**Windows Users:** Use WSL (Windows Subsystem for Linux) for best compatibility.
 
-# Learning
+### Development Environment
 
-## OCaml
+We recommend **Visual Studio Code** with the [OCaml Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform) extension for:
 
-### Recommended 
+- Syntax highlighting and formatting
+- Type information on hover
+- Jump to definition
+- Error checking
+- Auto-completion
 
-* **Functional Programming in OCaml**, Cornell CS3110 textbook. Freely available
-  [here](http://www.cs.cornell.edu/courses/cs3110/2019sp/textbook/). 
-* **Real World OCaml**, by Yaron Minsky, Anil Madhavapeddy and Jason Hickey. The
-  book is freely available at
-  [dev.realworldocaml.org](https://dev.realworldocaml.org/).
+Other editors with good OCaml support: Emacs (with Tuareg/Merlin), Vim (with Merlin/coc.nvim).
 
-### References
-* [**OCaml Manual**](http://caml.inria.fr/pub/docs/manual-ocaml/index.html)
+## Build Tools
+
+- **Dune**: OCaml build system (installed via opam above)
+- **Make**: Some examples use Makefiles for convenience
+
+## Benchmarking Tools
+
+- **Hyperfine**: Command-line benchmarking tool - [Installation](https://github.com/sharkdp/hyperfine)
+
+# Learning Resources
+
+## Concurrent Programming
+
+### Primary Textbooks
+
+- **The Art of Multiprocessor Programming (2nd Edition)** by Maurice Herlihy, Nir Shavit, Victor Luchangco, and Michael Spear.
+  [Publisher Link](https://shop.elsevier.com/books/the-art-of-multiprocessor-programming/herlihy/978-0-12-415950-1)
+
+  Comprehensive coverage of concurrent algorithms, memory models, and synchronization primitives.
+
+- **Control structures in programming languages: from goto to algebraic effects** by Xavier Leroy.
+  [Free Online](https://xavierleroy.org/control-structures/)
+
+  Essential reading on control structures, continuations, and effect handlers - foundational concepts for understanding concurrency and algebraic effects in OCaml 5.
+
+## OCaml 5 Multicore
+
+### Documentation
+
+- **OCaml 5 Manual**: [Domains](https://ocaml.org/manual/5.4/api/Domain.html) and [Effect Handlers](https://ocaml.org/manual/5.4/api/Effect.html)
+
+- **OCaml Multicore Wiki**: [github.com/ocaml-multicore/ocaml-multicore/wiki](https://github.com/ocaml-multicore/ocaml-multicore/wiki)
+
+### Tutorials
+
+- **Parallel Programming in Multicore OCaml**: [v2.ocaml.org/releases/5.0/manual/parallelism.html](https://v2.ocaml.org/releases/5.0/manual/parallelism.html)
+
+- **Introduction to Effect Handlers**: [OCaml.org Tutorial](https://ocaml.org/docs/effects)
+
+## General OCaml Resources
+
+### For Beginners
+
+- **OCaml Programming: Correct + Efficient + Beautiful** by Michael Clarkson et al. [cs3110.github.io/textbook](https://cs3110.github.io/textbook/cover.html)
+
+  Excellent introduction to functional programming and OCaml.
+
+- **Real World OCaml (2nd Edition)** by Yaron Minsky, Anil Madhavapeddy and Jason Hickey. [dev.realworldocaml.org](https://dev.realworldocaml.org/)
+
+  Practical OCaml programming with real-world examples.
+
+### Reference
+
+- **OCaml Manual**: [ocaml.org/manual](https://ocaml.org/manual/)
+
+- **OCaml API Documentation**: [ocaml.org/api](https://ocaml.org/api/)
 
 ### Practice
 
-* [99 Problems](https://ocaml.org/learn/tutorials/99problems.html)
+- **99 OCaml Problems**: [ocaml.org/problems](https://ocaml.org/problems)
 
-## Lambda Calculus
+- **Exercism OCaml Track**: [exercism.org/tracks/ocaml](https://exercism.org/tracks/ocaml)
 
-### Recommended
+## Systems and Architecture
 
-* **Types and Programming Languages** (TAPL), by Benjamin Pierce. 
-* **Peter Selinger's lecture notes on lambda calculus** available
-  [here](https://arxiv.org/abs/0804.3434).
+### Background Reading
 
-## Prolog
+- **Computer Architecture: A Quantitative Approach** by Hennessy and Patterson
 
-### Recommended
+  Essential for understanding memory hierarchies, cache coherence, and multiprocessor systems.
 
-* **Programming Languages, Concepts and Constructs, 2nd edition**, by Ravi
-  Sethi. Chapter 11.
+- **Operating Systems: Three Easy Pieces** by Remzi and Andrea Arpaci-Dusseau. Free at [pages.cs.wisc.edu/~remzi/OSTEP/](https://pages.cs.wisc.edu/~remzi/OSTEP/)
 
-### References
+  Chapters on concurrency and synchronization.
 
-* **The Art of Prolog, 2nd edition, Advanced Programming Techniques**, by Leon
-  Sterling and Ehud Y. Shapiro. Available for free
-  [here](https://mitpress.mit.edu/books/art-prolog-second-edition).
-* [P-99: Ninety-Nine Prolog Problems](https://www.ic.unicamp.br/~meidanis/courses/mc336/2009s2/prolog/problemas/)
+## Additional Topics
+
+### Memory Models
+
+- **C/C++ Memory Model**: [cppreference.com/w/cpp/atomic/memory_order](https://en.cppreference.com/w/cpp/atomic/memory_order)
+
+- **Linux Kernel Memory Barriers**: [kernel.org documentation](https://www.kernel.org/doc/Documentation/memory-barriers.txt)
+
+### Lock-Free Programming
+
+- **The Art of Multiprocessor Programming** (primary textbook above) has excellent coverage
+
+- **Preshing on Programming**: [preshing.com](https://preshing.com/) - Blog with excellent articles on concurrency and lock-free programming
+
+## Online Communities
+
+- **OCaml Discuss**: [discuss.ocaml.org](https://discuss.ocaml.org/)
+
+- **OCaml Discord**: [discord.gg/cCYQbqN](https://discord.gg/cCYQbqN)
+
+- **r/ocaml**: [reddit.com/r/ocaml](https://reddit.com/r/ocaml)

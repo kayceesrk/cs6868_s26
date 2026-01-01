@@ -64,3 +64,11 @@ Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-pl
 extension for development.
 
 Refer to individual lecture directories for specific setup instructions.
+
+## Acknowledgements
+
+The course material is inspired by and adapted from various sources, including:
+
+- [The Art of Multiprocessor Programming, 2nd Edition](https://shop.elsevier.com/books/the-art-of-multiprocessor-programming/herlihy/978-0-12-415950-1) by Maurice Herlihy, Nir Shavit, Victor Luchangco, and Michael Spear
+- [YSC4231: Parallel, Concurrent and Distributed Programming](https://ilyasergey.net/YSC4231/), taught by Ilya Sergey at Yale NUS College.
+- [Control structures in programming languages: from goto to algebraic effects](https://xavierleroy.org/control-structures/), Xavier Leroy.
