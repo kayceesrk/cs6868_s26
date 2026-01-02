@@ -2,6 +2,9 @@
 layout: page
 title: Resources
 permalink: /resources/
+banner_image: visalam.jpeg
+banner_link: https://www.architecturaldigest.in/story/visalam-the-greatest-example-of-chettinad-deco-in-india/
+banner_credit: "Photo © Sam Dalrymple / Architectural Digest"
 ---
 
 # Software

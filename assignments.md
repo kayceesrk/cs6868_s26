@@ -3,6 +3,8 @@ layout: page
 title: Assignments
 permalink: /assignments/
 banner_image: chennai_artdeco2.jpg
+banner_link: https://visitesfabienne.org/art-deco-chennai/
+banner_credit: "Photo © Les visites de Fabienne"
 ---
 
 | Assignment   | Due Date |

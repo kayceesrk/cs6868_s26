@@ -4,7 +4,18 @@ layout: default
 <div class="post">
 
   {% if page.banner_image %}
-  <img src="{{ site.baseurl }}/assets/images/{{ page.banner_image }}" alt="{{ page.title }} Banner" style="width: 100%; max-height: 300px; object-fit: cover; object-position: center; margin-bottom: 2rem; display: block;">
+    {% if page.banner_link %}
+    <a href="{{ page.banner_link }}" target="_blank">
+      <img src="{{ site.baseurl }}/assets/images/{{ page.banner_image }}" alt="{{ page.title }} Banner" style="width: 100%; max-height: 300px; object-fit: cover; object-position: center; margin-bottom: 0.5rem; display: block;">
+    </a>
+    {% else %}
+    <img src="{{ site.baseurl }}/assets/images/{{ page.banner_image }}" alt="{{ page.title }} Banner" style="width: 100%; max-height: 300px; object-fit: cover; object-position: center; margin-bottom: 0.5rem; display: block;">
+    {% endif %}
+    {% if page.banner_credit %}
+    <p style="text-align: center; font-size: 0.85em; color: #666; margin-top: 0; margin-bottom: 2rem;">
+      {{ page.banner_credit }}{% if page.banner_link %} | <a href="{{ page.banner_link }}" target="_blank">Source</a>{% endif %}
+    </p>
+    {% endif %}
   {% endif %}
 
   <header class="post-header">

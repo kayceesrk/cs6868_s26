@@ -2,7 +2,9 @@
 layout: page
 title: Schedule
 permalink: /schedule/
-banner_image: visalam.jpeg
+banner_image: chennai_artdeco3.jpg
+banner_link: https://www.madrasinherited.in/
+banner_credit: "Photo © Madras Inherited"
 ---
 
 | Lectures | Topic                       | Dates | Comments |

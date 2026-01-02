@@ -9,6 +9,12 @@ _site
 *.cmo
 *.cmt
 *.cmti
+*.cmx
+*.cmxa
+*.cma
+*.o
+*.a
+*.s
 temp/
 preview/
 .DS_Store

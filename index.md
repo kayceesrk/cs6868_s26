@@ -2,7 +2,10 @@
 layout: default
 ---
 
-![CS6868 Banner]({{ site.baseurl }}/assets/images/chennai_artdeco1.jpg)
+[![CS6868 Banner]({{ site.baseurl }}/assets/images/chennai_artdeco1.jpg)](https://www.madrasinherited.in/)
+<p style="text-align: center; font-size: 0.85em; color: #666; margin-top: -1rem; margin-bottom: 2rem;">
+Photo © <a href="https://www.madrasinherited.in/" target="_blank">Madras Inherited</a>
+</p>
 
 # CS6868: Concurrent Programming
 
@@ -53,21 +56,6 @@ Liaise with the TAs over email about where to meet.
 | Research mini project             | 16            |
 
 We will use absolute grading: S 90, A 80, B 70, C 60, D 50, E 35.
-
-## Software Setup
-
-We will use **OCaml 5.4 or later**. Follow the [installation instructions](https://ocaml.org/docs/install.html) to install OCaml and platform tools. Use Linux, macOS, *BSD, or WSL on Windows for best compatibility. IITM students can use DCF machines with pre-installed tools.
-
-**Quick Start (Linux/macOS):**
-
-```bash
-bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
-opam init
-opam switch create 5.4.0
-opam install ocaml-lsp-server ocamlformat utop domainslib qcheck-lin qcheck-stm
-```
-
-We recommend using VSCode with the [OCaml Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform) extension.
 
 ## Acknowledgements
 
