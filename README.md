@@ -15,7 +15,8 @@ with a focus on shared-memory multiprocessor systems. Topics include:
 - Lock-free and wait-free algorithms
 - Memory models and consistency
 - Parallel programming patterns
-- "Concurrency" foundations: continuations, monads, effect handlers
+- Effect handlers
+- Nested parallelism, Asynchronous I/O
 - Practical implementations using OCaml 5's multicore features
 - Safe parallel programming with OxCaml
 

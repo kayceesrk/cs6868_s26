@@ -15,15 +15,21 @@ This course explores the fundamentals of concurrent and parallel programming wit
 
 **Key Topics:**
 
-- Mutual exclusion and synchronization primitives
-- Concurrent data structures and algorithms
-- Lock-free and wait-free programming
+- Principles of concurrent programming
+- Mutual exclusion and synchronization
+- Concurrent data structures
+- Lock-free and wait-free algorithms
 - Memory models and consistency
-- Spinlocks and contention management
-- Effect handlers and algebraic effects
-- Practical multicore programming with OCaml 5
+- Parallel programming patterns
+- Effect handlers
+- Nested parallelism, Asynchronous I/O
+- Practical implementations using OCaml 5's multicore features
+- Safe parallel programming with OxCaml
 
-The course uses **OCaml 5** with native support for parallelism via [domains](https://ocaml.org/manual/5.4/api/Domain.html) and concurrency via [effect handlers](https://ocaml.org/manual/5.4/api/Effect.html), providing hands-on experience with modern concurrent programming techniques.
+The course uses **OCaml 5** with native support for parallelism via
+[domains](https://ocaml.org/manual/5.4/api/Domain.html) and concurrency via
+[effect handlers](https://ocaml.org/manual/5.4/api/Effect.html), providing
+hands-on experience with modern concurrent programming techniques.
 
 ## Prerequisites
 
@@ -52,10 +58,10 @@ Liaise with the TAs over email about where to meet.
 | In-class short quizzes (best 5/6) | 20            |
 | Mid-term exam                     | 20            |
 | End semester exam                 | 20            |
-| Programming assignments (6)       | 24            |
+| Programming assignments (4)       | 24            |
 | Research mini project             | 16            |
 
-The dates of the in-class short quizzes will be announced apriori. We will use
+The dates of the in-class short quizzes will be announced a priori. We will use
 absolute grading: S 90, A 80, B 70, C 60, D 50, E 35.
 
 ## Acknowledgements
