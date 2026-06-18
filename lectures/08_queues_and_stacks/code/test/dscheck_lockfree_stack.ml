@@ -66,8 +66,8 @@ let two_pushes () =
 (* Test 2 : one push and one pop, racing on an empty stack            *)
 (* ------------------------------------------------------------------ *)
 (* Two valid linearizations:
-     (a) pop first  → returns None,  then push → stack = [42]
-     (b) push first → stack = [42],  then pop  → returns Some 42, stack = []
+     (a) pop first  - returns None,  then push - stack = [42]
+     (b) push first - stack = [42],  then pop  - returns Some 42, stack = []
    The check accepts both outcomes and rejects everything else. *)
 
 let push_and_pop () =
@@ -107,9 +107,6 @@ let two_pops () =
             && Atomic.get s = []
         | _ -> false)))  (* one pop returning None would be a bug *)
 
-(* ------------------------------------------------------------------ *)
-(* Runner                                                              *)
-(* ------------------------------------------------------------------ *)
 
 let () =
   let open Alcotest in
