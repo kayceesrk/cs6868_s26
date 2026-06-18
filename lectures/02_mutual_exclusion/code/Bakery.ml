@@ -26,12 +26,15 @@ end
 let exists2i f arr1 arr2 =
   let n = Array.length arr1 in
   let rec loop i =
-    if i >= n then false else if f i arr1.(i) arr2.(i) then true else loop (i + 1)
+    if i >= n then false
+    else if f i arr1.(i) arr2.(i) then true
+    else loop (i + 1)
   in
   loop 0
 
 module Bakery : BAKERY = struct
   type t = { flag : bool array; label : int array }
+
   let create n_threads =
     { flag = Array.make n_threads false; label = Array.make n_threads 0 }
 

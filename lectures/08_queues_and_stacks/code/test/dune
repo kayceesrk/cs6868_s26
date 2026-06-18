@@ -98,3 +98,8 @@
  (modules benchmark_queues)
  (libraries bounded_queue bounded_queue_split_counter lockfree_queue unix))
 
+(executable
+ (name dscheck_lockfree_stack)
+ (modules dscheck_lockfree_stack)
+ (libraries dscheck alcotest))
+
