@@ -105,10 +105,14 @@ let two_pops () =
         | _ -> false)))  (* one pop returning None would be a bug *)
 
 
+(* Conservation Property: *)
+(* Two values are pushed and two concurrent pops are executed.this checks that the stack never loses or duplicates elements. *)
+let conservation () =
 let () =
   let open Alcotest in
   run "dscheck_lockfree_stack"
     [ "two-pushes", [ test_case "both values in stack"    `Slow two_pushes  ]
     ; "push-pop",   [ test_case "linearizable push+pop"   `Slow push_and_pop]
     ; "two-pops",   [ test_case "each item popped exactly once" `Slow two_pops    ]
+    ; "conservation",[ test_case "elements are neither lost nor duplicated" `Slow conservation ]
     ]
