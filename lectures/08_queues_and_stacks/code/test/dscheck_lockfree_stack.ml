@@ -1,16 +1,4 @@
-(** DSCheck test for a lock-free stack (Treiber stack).
-
-    DSCheck works by replacing the standard Atomic module with its own
-    TracedAtomic, which records every atomic operation.  It then
-    exhaustively replays every possible interleaving of those operations
-    across all spawned domains.  Any assertion that fails in *any*
-    interleaving is reported.
-
-    Because DSCheck needs to intercept atomic operations at the module
-    level, we cannot use the pre-compiled lockfree_stack library here.
-    Instead we inline a simplified Treiber stack (no backoff — backoff
-    uses Random/cpu_relax which are outside DSCheck's model) using
-    [Dscheck.TracedAtomic].  The logic is identical to lockfree_stack.ml. *)
+(** DSCheck test for a lock-free stack (Treiber stack).*)
 
 module Atomic = Dscheck.TracedAtomic
 
@@ -19,6 +7,13 @@ module Atomic = Dscheck.TracedAtomic
 (* ------------------------------------------------------------------ *)
 
 exception Empty
+(* If we would have chosen the below representatino then we have to worry about ABA or hazard pointer error, and anyways in ocaml lists are immutable so 
+doing a:: [..] will create a whole new list instead of a new list. *)
+(* type node =
+{
+  value : int;
+  next : node option;
+} *)
 
 (* The whole stack is one atomic cell holding an immutable list.
    push = CAS old (x::old), pop = CAS (x::rest) rest. *)
@@ -38,6 +33,8 @@ let rec pop s =
     if Atomic.compare_and_set s old rest then x
     else pop s
 
+	(* empty stack => None
+nonempty => Some value *)
 let try_pop s =
   match pop s with
   | v      -> Some v
