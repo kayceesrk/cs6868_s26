@@ -108,6 +108,41 @@ let two_pops () =
 (* Conservation Property: *)
 (* Two values are pushed and two concurrent pops are executed.this checks that the stack never loses or duplicates elements. *)
 let conservation () =
+Atomic.trace (fun () ->
+let s = create () in
+
+let r1 = Atomic.make None in
+let r2 = Atomic.make None in
+
+Atomic.spawn (fun () -> push s 1);
+Atomic.spawn (fun () -> push s 2);
+
+Atomic.spawn (fun () ->
+  Atomic.set r1 (try_pop s));
+
+Atomic.spawn (fun () ->
+  Atomic.set r2 (try_pop s));
+
+Atomic.final (fun () ->
+  Atomic.check (fun () ->
+    let elems = ref [] in
+
+    (match Atomic.get r1 with
+     | Some x -> elems := x :: !elems
+     | None -> ());
+
+    (match Atomic.get r2 with
+     | Some x -> elems := x :: !elems
+     | None -> ());
+
+    let remaining = Atomic.get s in
+
+    let all =
+      List.sort compare (!elems @ remaining)
+    in
+
+    all = [1; 2])))
+
 let () =
   let open Alcotest in
   run "dscheck_lockfree_stack"
