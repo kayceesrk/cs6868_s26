@@ -103,3 +103,7 @@
  (modules dscheck_lockfree_stack)
  (libraries dscheck alcotest))
 
+(executable
+ (name dscheck_lockfree_stack_usingBuiltinlist)
+ (modules dscheck_lockfree_stack_usingBuiltinlist)
+ (libraries dscheck alcotest))
