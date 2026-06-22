@@ -48,7 +48,8 @@ let try_pop s =
    (in either order — LIFO order depends on which CAS won). *)
 
 let two_pushes () =
-  Atomic.trace (fun () ->
+(* Try to run all possible interleaving *)
+Atomic.trace (fun () ->
     let s = create () in
     Atomic.spawn (fun () -> push s 1);
     Atomic.spawn (fun () -> push s 2);
