@@ -72,16 +72,24 @@ Atomic.trace (fun () ->
 
 let push_and_pop () =
   Atomic.trace (fun () ->
-    let s      = create () in
+    let s = Stack.create () in
     let popped = Atomic.make None in
-    Atomic.spawn (fun () -> push s 42);
-    Atomic.spawn (fun () -> Atomic.set popped (try_pop s));
+
+    Atomic.spawn (fun () ->Stack.push s 42);
+
+    Atomic.spawn (fun () ->
+      Atomic.set popped (Stack.try_pop s));
+
     Atomic.final (fun () ->
       Atomic.check (fun () ->
-        let contents = Atomic.get s in
         match Atomic.get popped with
-        | None   -> contents = [42]          (* pop ran before push *)
-        | Some v -> v = 42 && contents = []))) (* pop ran after push *)
+        | None ->
+            Stack.try_pop s = Some 42
+        | Some 42 ->
+            Stack.try_pop s = None
+        | _ ->
+            false)))
+;;
 
 (* ------------------------------------------------------------------ *)
 (* Test 3 : two concurrent pops on a two-element stack                *)
