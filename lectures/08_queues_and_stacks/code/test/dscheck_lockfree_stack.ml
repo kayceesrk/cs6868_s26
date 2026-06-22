@@ -1,19 +1,21 @@
-(** DSCheck test for a lock-free stack (Treiber stack).*)
+(** DSCheck tests for Treiber Stack over the imoplementation provided for lockFreestack*)
+(* Here we are using pointer based approach for representing stack.
+  type 'a node = {
+    value : 'a;
+    next  : 'a node option;
+  }
 
+*)
 module Atomic = Dscheck.TracedAtomic
+module Stack = Lockfree_stack
 
 (* ------------------------------------------------------------------ *)
-(* Inline Treiber stack using TracedAtomic                            *)
+(* Test 1 : two concurrent pushes                                     *)
+(* Here we spawning two threads and doing concurrent pushes.
+Now final stack should have either a,b or b,a as final state, we are checking property that no value
+is lost in lockfree stack, means the implementation doesn't have any race condition. *)
 (* ------------------------------------------------------------------ *)
 
-exception Empty
-(* If we would have chosen the below representatino then we have to worry about ABA or hazard pointer error, and anyways in ocaml lists are immutable so 
-doing a:: [..] will create a whole new list instead of a new list. *)
-(* type node =
-{
-  value : int;
-  next : node option;
-} *)
 
 (* The whole stack is one atomic cell holding an immutable list.
    push = CAS old (x::old), pop = CAS (x::rest) rest. *)
