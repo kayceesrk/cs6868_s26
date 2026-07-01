@@ -47,6 +47,65 @@ let two_adds_distinct_elements () =
       Atomic.check (fun () ->
         Atomic.get r1 && Atomic.get r2  && L.contains l 1  && L.contains l 2
       )))
+
+
+(* 
+TEST 3:
+    Two concurrent removes of the same element, 
+    Both threads will try to delete it, succedding only one. 
+*)
+
+let two_removes_same_element () =
+  Atomic.trace (fun () ->
+    let l  = L.create () in
+    ignore (L.add l 42);   (* setup: 42 already in the list *)
+    let r1 = Atomic.make false in
+    let r2 = Atomic.make false in
+
+    Atomic.spawn (fun () -> Atomic.set r1 (L.remove l 42));
+    Atomic.spawn (fun () -> Atomic.set r2 (L.remove l 42));
+
+    (* Final goal here is to check only one thread should get success only calling deletion more than once,
+    as we dont have duplicates in our list. Also after either of the thread get success, the lists should not contain 
+    that value. *)
+    Atomic.final (fun () ->
+      Atomic.check (fun () ->
+        let a = Atomic.get r1 in
+        let b = Atomic.get r2 in (a || b) && not (a && b) && not (L.contains l 42)
+      )))
+
+(* Test 4: 
+  Add and remove racing on the same element (empty start)    
+                                                                    
+   Two valid linearizations:                                          
+   remove first --> remove=false, add=true,  contains=true          
+   add first    --> add=true,     remove=true, contains=false       
+  add=false is always a bug — nothing blocked it on an empty list.   
+*)
+
+let add_remove_race () =
+  Atomic.trace (fun () ->
+    let l     = L.create () in
+    let r_add = Atomic.make false in
+    let r_rem = Atomic.make false in
+
+    Atomic.spawn (fun () -> Atomic.set r_add (L.add l 42));
+    Atomic.spawn (fun () -> Atomic.set r_rem (L.remove l 42));
+
+    Atomic.final (fun () ->
+      Atomic.check (fun () ->
+        match Atomic.get r_add, Atomic.get r_rem with
+        | true, false ->
+            (* remove ran first (element absent), add won after *)
+            L.contains l 42
+        | true, true ->
+            (* add ran first, then remove succeeded *)
+            not (L.contains l 42)
+        | false, _ ->
+            (* add can never fail on an empty list — always a bug *)
+            false
+      )))
+
 (* Alcotest runner
         Basically a test suite runner like we have used gtests for c++.
         Prvoide verbose output when any test case fails.
@@ -59,3 +118,5 @@ let () =
   run "dscheck_lockfree_list"
     [ "no-duplicates", [ test_case "concurrent adds of same element"      `Slow two_adds_same_element      ]
     ; "no-lost-adds",  [ test_case "concurrent adds of distinct elements" `Slow two_adds_distinct_elements ]
+    ; "excl-remove",   [ test_case "concurrent removes of same element"   `Slow two_removes_same_element   ]
+    ; "add-rem-race",  [ test_case "add and remove race on same element"  `Slow add_remove_race            ]
