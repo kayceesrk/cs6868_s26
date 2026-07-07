@@ -101,9 +101,9 @@
 (executable
  (name dscheck_lockfree_stack)
  (modules dscheck_lockfree_stack)
- (libraries dscheck alcotest))
+ (libraries lockfree_stack dscheck))
 
 (executable
  (name dscheck_lockfree_stack_usingBuiltinlist)
  (modules dscheck_lockfree_stack_usingBuiltinlist)
- (libraries dscheck alcotest))
+ (libraries lockfree_stack_builtin_list dscheck))
