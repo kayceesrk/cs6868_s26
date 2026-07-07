@@ -106,6 +106,39 @@ let add_remove_race () =
             false
       )))
 
+(* ------------------------------------------------------------------ *)
+(* Test 5: Conservation — no elements created or lost                  *)
+(*                                                                      *)
+(* 4 threads: add 1, add 2, remove 1, remove 2.                      *)
+(* For each element: if added and removed --> gone.                     *)
+(*                   if added only         --> present.                 *)
+(*                   if never added        --> remove must have returned false *)
+(* ------------------------------------------------------------------ *)
+
+let conservation () =
+  Atomic.trace (fun () ->
+    let l   = L.create () in
+    let ra1 = Atomic.make false in   (* result: add 1    *)
+    let ra2 = Atomic.make false in   (* result: add 2    *)
+    let rr1 = Atomic.make false in   (* result: remove 1 *)
+    let rr2 = Atomic.make false in   (* result: remove 2 *)
+
+    Atomic.spawn (fun () -> Atomic.set ra1 (L.add l 1));
+    Atomic.spawn (fun () -> Atomic.set ra2 (L.add l 2));
+    Atomic.spawn (fun () -> Atomic.set rr1 (L.remove l 1));
+    Atomic.spawn (fun () -> Atomic.set rr2 (L.remove l 2));
+
+    Atomic.final (fun () ->
+      Atomic.check (fun () ->
+        let check x added removed =
+          if added && removed then not (L.contains l x)
+          else if added        then L.contains l x
+          else                      not removed
+        in
+        check 1 (Atomic.get ra1) (Atomic.get rr1)
+        && check 2 (Atomic.get ra2) (Atomic.get rr2)
+      )))
+
 (* Alcotest runner
         Basically a test suite runner like we have used gtests for c++.
         Prvoide verbose output when any test case fails.
@@ -120,3 +153,5 @@ let () =
     ; "no-lost-adds",  [ test_case "concurrent adds of distinct elements" `Slow two_adds_distinct_elements ]
     ; "excl-remove",   [ test_case "concurrent removes of same element"   `Slow two_removes_same_element   ]
     ; "add-rem-race",  [ test_case "add and remove race on same element"  `Slow add_remove_race            ]
+    ; "conservation",  [ test_case "no elements created or lost"          `Slow conservation               ]
+    ]
