@@ -139,19 +139,25 @@ let conservation () =
         && check 2 (Atomic.get ra2) (Atomic.get rr2)
       )))
 
-(* Alcotest runner
-        Basically a test suite runner like we have used gtests for c++.
-        Prvoide verbose output when any test case fails.
-        Have two modes: Slow & Quick, we are using slow, because dscheck can takes seconds for exploring all interleavings.
-
-*)
-
+(* Removed alcotest, and now directly calling each fn and verifying it  *)
 let () =
-  let open Alcotest in
-  run "dscheck_lockfree_list"
-    [ "no-duplicates", [ test_case "concurrent adds of same element"      `Slow two_adds_same_element      ]
-    ; "no-lost-adds",  [ test_case "concurrent adds of distinct elements" `Slow two_adds_distinct_elements ]
-    ; "excl-remove",   [ test_case "concurrent removes of same element"   `Slow two_removes_same_element   ]
-    ; "add-rem-race",  [ test_case "add and remove race on same element"  `Slow add_remove_race            ]
-    ; "conservation",  [ test_case "no elements created or lost"          `Slow conservation               ]
-    ]
+(* If each test case runs successfully means it was successfull.  *)
+  two_adds_same_element ();
+  print_endline "no-duplicates test passed!";
+
+  two_adds_distinct_elements ();
+  print_endline "no-lost-adds test passed!";
+
+  two_removes_same_element ();
+  print_endline "excl-remove test passed!";
+
+  add_remove_race ();
+  print_endline "add-rem-race test passed!";
+
+  conservation ();
+  print_endline "conservation test passed!";
+
+  print_endline "All dscheck_lockfree_list tests passed!"
+
+
+  
